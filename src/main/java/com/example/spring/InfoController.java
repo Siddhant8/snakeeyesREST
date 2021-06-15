@@ -20,32 +20,27 @@ public class InfoController {
     }
 
     @GetMapping("/studyGuide/{id}")
-    Info one(@PathVariable Long id) {
+    public Optional<Info> getInfo(@PathVariable Long id) {
 
         return codeInterface.findById(id)
-                .orElseThrow(() -> new InfoNotFoundException(id));
+                
     }
-
-    /*@GetMapping("/studyGuide")
-    public List<Info> everything() {
-        return codeInterface.findAll();
-    }*/
 
     @GetMapping("/studyGuide")
-    CollectionModel<EntityModel<Info>> all() {
-
-        List<EntityModel<Info>> infos = codeInterface.findAll().stream()
-                .map(info -> EntityModel.of(info,
-                        linkTo(methodOn(InfoController.class).one(info.getId())).withSelfRel(),
-                        linkTo(methodOn(InfoController.class).all()).withRel("info")))
-                .collect(Collectors.toList());
-
-        return CollectionModel.of(infos, linkTo(methodOn(InfoController.class).all()).withSelfRel());
+    public List<Info> everything() {
+        return codeInterface.findAll();
     }
+
+ 
 
     @PostMapping("/studyGuide")
     Info newInfo(@RequestBody Info newInfo) {
         return codeInterface.save(newInfo);
+    }
+    
+    @DeleteMapping("/studyGuide/{id}")
+    public void deleteInfo(@PathVariable Long id){
+        return codeInterface.deleteById(id);
     }
 
 }
